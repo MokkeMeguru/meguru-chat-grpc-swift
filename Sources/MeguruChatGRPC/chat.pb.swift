@@ -123,6 +123,8 @@ public struct Chat_V1_User {
 
   public var name: String = String()
 
+  public var avatarURL: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -147,31 +149,21 @@ public struct Chat_V1_Message {
   /// Clears the value of `user`. Subsequent reads from it will return its default value.
   public mutating func clearUser() {self._user = nil}
 
-  public var createdAt: SwiftProtobuf.Google_Protobuf_Timestamp {
-    get {return _createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
-    set {_createdAt = newValue}
+  public var postedAt: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _postedAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_postedAt = newValue}
   }
-  /// Returns true if `createdAt` has been explicitly set.
-  public var hasCreatedAt: Bool {return self._createdAt != nil}
-  /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
-  public mutating func clearCreatedAt() {self._createdAt = nil}
-
-  public var updatedAt: SwiftProtobuf.Google_Protobuf_Timestamp {
-    get {return _updatedAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
-    set {_updatedAt = newValue}
-  }
-  /// Returns true if `updatedAt` has been explicitly set.
-  public var hasUpdatedAt: Bool {return self._updatedAt != nil}
-  /// Clears the value of `updatedAt`. Subsequent reads from it will return its default value.
-  public mutating func clearUpdatedAt() {self._updatedAt = nil}
+  /// Returns true if `postedAt` has been explicitly set.
+  public var hasPostedAt: Bool {return self._postedAt != nil}
+  /// Clears the value of `postedAt`. Subsequent reads from it will return its default value.
+  public mutating func clearPostedAt() {self._postedAt = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 
   fileprivate var _user: Chat_V1_User? = nil
-  fileprivate var _createdAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
-  fileprivate var _updatedAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _postedAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -400,6 +392,7 @@ extension Chat_V1_User: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
     2: .same(proto: "name"),
+    3: .standard(proto: "avatar_url"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -410,6 +403,7 @@ extension Chat_V1_User: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularStringField(value: &self.userID) }()
       case 2: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.avatarURL) }()
       default: break
       }
     }
@@ -422,12 +416,16 @@ extension Chat_V1_User: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     if !self.name.isEmpty {
       try visitor.visitSingularStringField(value: self.name, fieldNumber: 2)
     }
+    if !self.avatarURL.isEmpty {
+      try visitor.visitSingularStringField(value: self.avatarURL, fieldNumber: 3)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Chat_V1_User, rhs: Chat_V1_User) -> Bool {
     if lhs.userID != rhs.userID {return false}
     if lhs.name != rhs.name {return false}
+    if lhs.avatarURL != rhs.avatarURL {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -439,8 +437,7 @@ extension Chat_V1_Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     1: .standard(proto: "message_id"),
     3: .same(proto: "message"),
     2: .same(proto: "user"),
-    4: .standard(proto: "created_at"),
-    5: .standard(proto: "updated_at"),
+    4: .standard(proto: "posted_at"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -452,8 +449,7 @@ extension Chat_V1_Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
       case 1: try { try decoder.decodeSingularStringField(value: &self.messageID) }()
       case 2: try { try decoder.decodeSingularMessageField(value: &self._user) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.message) }()
-      case 4: try { try decoder.decodeSingularMessageField(value: &self._createdAt) }()
-      case 5: try { try decoder.decodeSingularMessageField(value: &self._updatedAt) }()
+      case 4: try { try decoder.decodeSingularMessageField(value: &self._postedAt) }()
       default: break
       }
     }
@@ -473,11 +469,8 @@ extension Chat_V1_Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     if !self.message.isEmpty {
       try visitor.visitSingularStringField(value: self.message, fieldNumber: 3)
     }
-    try { if let v = self._createdAt {
+    try { if let v = self._postedAt {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    } }()
-    try { if let v = self._updatedAt {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
     } }()
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -486,8 +479,7 @@ extension Chat_V1_Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     if lhs.messageID != rhs.messageID {return false}
     if lhs.message != rhs.message {return false}
     if lhs._user != rhs._user {return false}
-    if lhs._createdAt != rhs._createdAt {return false}
-    if lhs._updatedAt != rhs._updatedAt {return false}
+    if lhs._postedAt != rhs._postedAt {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
