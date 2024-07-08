@@ -68,10 +68,10 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git checkout -b update-proto
+          git checkout -b feature/ga-follow-updated-grpc-spec-${{ env.SHORT_COMMIT_HASH }}
           git add Sources/MeguruChatGRPC
           git commit -m "Update generated gRPC code"
-          git push origin update-proto
+          git push origin feature/ga-follow-updated-grpc-spec-${{ env.SHORT_COMMIT_HASH }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
