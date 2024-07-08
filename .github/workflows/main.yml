@@ -1,0 +1,80 @@
+name: Update from Proto Spec
+
+on:
+  repository_dispatch:
+    types: [update-proto]
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Clone proto repository
+        run: |
+          git clone https://github.com/MokkeMeguru/meguru-proto-spec.git proto-repo
+          cd proto-repo
+          git checkout main
+
+      - name: Get commit hash
+        id: get-commit-hash
+        run: |
+          cd proto-repo
+          COMMIT_HASH=$(git rev-parse HEAD)
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
+          SHORT_COMMIT_HASH=$(git rev-parse --short HEAD)
+          echo "SHORT_COMMIT_HASH=$SHORT_COMMIT_HASH" >> $GITHUB_ENV
+
+      - name: Set up protoc
+        run: |
+          PROTOC_ZIP=protoc-27.2-osx-x86_64.zip
+          curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v27.2/$PROTOC_ZIP
+          unzip -o $PROTOC_ZIP -d $HOME/.local
+          rm -f $PROTOC_ZIP
+
+      - name: Set up grpc-swift
+        run: |
+          # Download and install grpc-swift
+          GRPC_SWIFT_ZIP=protoc-grpc-swift-plugins-1.23.0.zip
+          curl -OL https://github.com/grpc/grpc-swift/releases/download/1.23.0/$GRPC_SWIFT_ZIP
+          unzip -o $GRPC_SWIFT_ZIP -d $HOME/.local
+          rm -f $GRPC_SWIFT_ZIP
+
+      - name: Build proto files
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          protoc --version
+          protoc-gen-grpc-swift --version
+          cd chat/v1
+          protoc --proto_path=$HOME/.local/include --proto_path=. \
+            --swift_opt=Visibility=Public \
+            --swift_out=. \
+            --grpc-swift_opt=Visibility=Public,Client=true,Server=false,GRPCModuleName=ChatGRPC \
+            --grpc-swift_out=. \
+            --plugin=$HOME/.local/bin/protoc-gen-grpc-swift *.proto
+
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -b update-proto
+          git add .
+          git commit -m "Update generated gRPC code"
+          git push origin update-proto
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update generated gRPC code
+          title: "[update] Update generated gRPC code (from github actions)"
+          body: |
+            This PR updates the generated gRPC code by [$SHORT_COMMIT_HASH](https://github.com/MokkeMeguru/meguru-proto-spec/commit/$COMMIT_HASH).
+          head: update-proto
+          base: main
+          labels: feature
