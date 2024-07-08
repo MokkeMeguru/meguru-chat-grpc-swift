@@ -21,8 +21,8 @@ jobs:
 
       - name: Get commit hash
         id: get-commit-hash
+        working-directory: proto-repo
         run: |
-          cd proto-repo
           COMMIT_HASH=$(git rev-parse HEAD)
           echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
           SHORT_COMMIT_HASH=$(git rev-parse --short HEAD)
@@ -44,11 +44,12 @@ jobs:
           rm -f $GRPC_SWIFT_ZIP
 
       - name: Build proto files
+        working-directory: proto-repo/chat/v1
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           protoc --version
           protoc-gen-grpc-swift --version
-          cd chat/v1
+          
           protoc --proto_path=$HOME/.local/include --proto_path=. \
             --swift_opt=Visibility=Public \
             --swift_out=. \
@@ -56,6 +57,11 @@ jobs:
             --grpc-swift_out=. \
             --plugin=$HOME/.local/bin/protoc-gen-grpc-swift *.proto
 
+      - name: Copy proto into repo
+        run: |
+          cp proto-repo/chat/v1/* Sources/MeguruChatGRPC
+          rm Sources/MeguruChatGRPC/chat.proto
+      
       - name: Commit and push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,7 +69,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git checkout -b update-proto
-          git add .
+          git add Sources/MeguruChatGRPC
           git commit -m "Update generated gRPC code"
           git push origin update-proto
 
