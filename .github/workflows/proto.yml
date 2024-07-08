@@ -80,7 +80,7 @@ jobs:
           commit-message: Update generated gRPC code
           title: "[update] Update generated gRPC code (from github actions)"
           body: |
-            This PR updates the generated gRPC code by [$SHORT_COMMIT_HASH](https://github.com/MokkeMeguru/meguru-proto-spec/commit/$COMMIT_HASH).
+            This PR updates the generated gRPC code by [${{ env.SHORT_COMMIT_HASH }}](https://github.com/MokkeMeguru/meguru-proto-spec/commit/${{ env.COMMIT_HASH }}).
           head: update-proto
           base: main
           labels: feature
