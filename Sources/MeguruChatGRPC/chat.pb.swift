@@ -87,6 +87,8 @@ public struct Chat_V1_TempCreateUserRequest {
 
   public var name: String = String()
 
+  public var avatarURL: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -323,6 +325,7 @@ extension Chat_V1_TempCreateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._M
   public static let protoMessageName: String = _protobuf_package + ".TempCreateUserRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "name"),
+    2: .standard(proto: "avatar_url"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -332,6 +335,7 @@ extension Chat_V1_TempCreateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._M
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.avatarURL) }()
       default: break
       }
     }
@@ -341,11 +345,15 @@ extension Chat_V1_TempCreateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._M
     if !self.name.isEmpty {
       try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
     }
+    if !self.avatarURL.isEmpty {
+      try visitor.visitSingularStringField(value: self.avatarURL, fieldNumber: 2)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Chat_V1_TempCreateUserRequest, rhs: Chat_V1_TempCreateUserRequest) -> Bool {
     if lhs.name != rhs.name {return false}
+    if lhs.avatarURL != rhs.avatarURL {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
