@@ -127,6 +127,8 @@ public struct Chat_V1_User {
 
   public var avatarURL: String = String()
 
+  public var age: Int32 = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -401,6 +403,7 @@ extension Chat_V1_User: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     1: .standard(proto: "user_id"),
     2: .same(proto: "name"),
     3: .standard(proto: "avatar_url"),
+    4: .same(proto: "age"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -412,6 +415,7 @@ extension Chat_V1_User: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
       case 1: try { try decoder.decodeSingularStringField(value: &self.userID) }()
       case 2: try { try decoder.decodeSingularStringField(value: &self.name) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.avatarURL) }()
+      case 4: try { try decoder.decodeSingularInt32Field(value: &self.age) }()
       default: break
       }
     }
@@ -427,6 +431,9 @@ extension Chat_V1_User: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     if !self.avatarURL.isEmpty {
       try visitor.visitSingularStringField(value: self.avatarURL, fieldNumber: 3)
     }
+    if self.age != 0 {
+      try visitor.visitSingularInt32Field(value: self.age, fieldNumber: 4)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -434,6 +441,7 @@ extension Chat_V1_User: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     if lhs.userID != rhs.userID {return false}
     if lhs.name != rhs.name {return false}
     if lhs.avatarURL != rhs.avatarURL {return false}
+    if lhs.age != rhs.age {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -38,7 +38,7 @@ extension Chat_V1_ChatServiceClientProtocol {
     return "chat.v1.ChatService"
   }
 
-  /// 検証用の一時的なユーザーを作成 RPC
+  /// 検証用の一時的なユーザーを作成する RPC
   ///
   /// - Parameters:
   ///   - request: Request to send to TempCreateUser.
