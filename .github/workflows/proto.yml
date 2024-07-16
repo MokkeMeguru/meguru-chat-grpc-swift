@@ -79,4 +79,4 @@ jobs:
             --title "[update] Update generated gRPC code" \
             --body "This PR updates the generated gRPC code by [${{ env.SHORT_COMMIT_HASH }}](https://github.com/MokkeMeguru/meguru-proto-spec/commit/${{ env.COMMIT_HASH }})." \
             --base main \
-            --lable feature
+            --label feature
