@@ -74,13 +74,9 @@ jobs:
           git push origin feature/ga-follow-updated-grpc-spec-${{ env.SHORT_COMMIT_HASH }}
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update generated gRPC code
-          title: "[update] Update generated gRPC code (from github actions)"
-          body: |
-            This PR updates the generated gRPC code by [${{ env.SHORT_COMMIT_HASH }}](https://github.com/MokkeMeguru/meguru-proto-spec/commit/${{ env.COMMIT_HASH }}).
-          head: update-proto
-          base: main
-          labels: feature
+        run: |
+          gh pr create \
+            --title "[update] Update generated gRPC code" \
+            --body "This PR updates the generated gRPC code by [${{ env.SHORT_COMMIT_HASH }}](https://github.com/MokkeMeguru/meguru-proto-spec/commit/${{ env.COMMIT_HASH }})." \
+            --base main \
+            --label feature
